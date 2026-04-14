@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Cloud, Stars, Float, MeshDistortMaterial } from '@react-three/drei';
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
 function FloatingShape({ position, color, speed, factor }) {
@@ -93,9 +93,21 @@ function ParticleField() {
 }
 
 export default function Background3D() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="fixed top-0 left-0 w-full h-full pointer-events-none -z-10">
-      <Canvas camera={{ position: [0, 0, 20], fov: 60 }}>
+      <Canvas 
+        key="canvas-3d"
+        camera={{ position: [0, 0, 20], fov: 60 }}
+        gl={{ antialias: true, alpha: true }}
+      >
         {/* Lights */}
         <ambientLight intensity={0.5} />
         <spotLight position={[50, 50, 50]} angle={0.25} penumbra={1} />
